@@ -1,10 +1,20 @@
-#gem install riif
 require 'csv'
 
-puts "Initial Commit!"
-puts "This is what your CSV CONTAINS!:"
-gets.chomp
+#Defining headers
+top_header = %w(!TRNS DATE ACCNT NAME CLASS AMOUNT MEMO)
+mid_header = %w(!SPL DATE ACCNT NAME AMOUNT MEMO)
+bot_header = %w(!ENDTRNS)
+
+headers = [top_header, mid_header, bot_header]
+
+file_contents = []
 CSV.foreach("EXPORT.csv") do |row|
-	puts row.inspect
+	file_contents << row
 end
-gets.chomp
+
+File.open("Example.iif", "w") { |io|
+	headers.each do |header|
+		io.write(header.join("\t"))
+		io.write("\n")
+	end
+}
