@@ -25,17 +25,17 @@ File.open("Example.iif", "w") { |io|
 		amount = row[3] || row[4]
 		amount = amount.to_i
 		io.write("TRNS\t")
-		io.write("#{row[0]}\t")
-		io.write("Checking (X 9317)\t")
-		io.write("\t\t")
-		io.write("#{amount.to_s}\t")
-		io.write("#{row[1]}\t")
-		io.write("\n")
+		io.write("#{row[0]}\t") #TOP DATE
+		io.write("Checking (X 9317)\t")#TOP ACCNT
+		io.write("\t\t")#TOP NAME, TOP CLASS
+		io.write("#{amount.to_s}\t")#TOP AMOUNT
+		io.write("#{row[1]}\t")#TOP MEMO
+		io.write("\n")#ENDL
 		io.write("SPL\t")
-		io.write("#{row[0]}\t")
-		io.write("Bank Service Charges\t\t")
-		io.write("#{(amount*-1).to_s}\t")
-		io.write("\t\n")
-		io.write("ENDTRNS\t\n")
+		io.write("#{row[0]}\t") #BOT DATE
+		io.write("Bank Service Charges\t\t")#BOT ACCNT+BOT NAME
+		io.write("#{(amount*-1).to_s}\t")#BOT AMOUNT
+		io.write("\t\n")#BOT MEMO + ENDL
+		io.write("ENDTRNS\t\n") #Next Trans
 	end
 }
