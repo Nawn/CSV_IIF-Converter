@@ -20,4 +20,22 @@ File.open("Example.iif", "w") { |io|
 		io.write(header.join("\t"))
 		io.write("\n")
 	end
+
+	file_contents.each do |row|
+		amount = row[3] || row[4]
+		amount = amount.to_i
+		io.write("TRNS\t")
+		io.write("#{row[0]}\t")
+		io.write("Checking (X 9317)\t")
+		io.write("\t\t")
+		io.write("#{amount.to_s}\t")
+		io.write("#{row[1]}\t")
+		io.write("\n")
+		io.write("SPL\t")
+		io.write("#{row[0]}\t")
+		io.write("Bank Service Charges\t\t")
+		io.write("#{(amount*-1).to_s}\t")
+		io.write("\t\n")
+		io.write("ENDTRNS\t\n")
+	end
 }
