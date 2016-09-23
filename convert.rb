@@ -14,6 +14,13 @@ CSV.foreach("EXPORT.csv") do |row|
 	file_contents << row #Add the row of data as an Array to the file_contents array
 end
 
+#Delete from the imported list of it's either Empty, or begins with anything other than a number (Supposed to be date)
+file_contents.delete_if {|content| content[0].nil? || content[0][0] !~ /^[0-9].*/}
+
+file_contents.each do |content|
+	puts content.inspect
+end
+
 File.open("Example.iif", "w") { |io|
 	#Add the header definitions at the top of the IIF.
 	headers.each do |header|
