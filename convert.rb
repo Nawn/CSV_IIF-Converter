@@ -1,5 +1,31 @@
 require 'csv'
 
+puts "Thank you for using the CSV to IIF file converter"
+puts "Please press enter to begin..."
+gets
+
+import_folder = "csv_file" # Declaring the name of the folder.
+export_folder = "export"
+folders = [import_folder, export_folder]
+
+folders.each do |folder|
+	puts "Checking if #{folder} exists..."
+	exists = Dir.exists?(folder)
+	puts exists ? "#{folder} Found..\nContinuing.." : "#{folder} not found..\nCreating.."
+
+	unless exists
+		Dir.mkdir(folder)
+		puts "Create #{folder}: Success..."
+	end
+end
+
+
+puts "Please ensure that your CSV file is: \n1.) in the #{import_folder} folder\n2.) titled EXPORT.csv\n"
+puts "Press enter when you're ready.."
+gets
+raise ArgumentError.new("CSV FILE NOT IN DIRECTORY!") unless File.exists?("#{import_folder}/EXPORT.csv")
+
+
 #Defining headers
 top_header = %w(!TRNS DATE ACCNT NAME CLASS AMOUNT MEMO)
 mid_header = %w(!SPL DATE ACCNT NAME AMOUNT MEMO)
