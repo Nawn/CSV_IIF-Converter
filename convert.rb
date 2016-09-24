@@ -1,45 +1,28 @@
+require_relative 'converter.rb'
 require 'csv'
+
+converter = Converter.new
 
 puts "Thank you for using the CSV to IIF file converter"
 puts "Please press enter to begin..."
 gets
 
-import_folder = "csv_file" # Declaring the name of the folder.
-export_folder = "export"
-folders = [import_folder, export_folder]
+converter.folders()
 
-folders.each do |folder|
-	puts "Checking if #{folder} exists..."
-	exists = Dir.exists?(folder)
-	puts exists ? "#{folder} Found..\nContinuing.." : "#{folder} not found..\nCreating.."
-
-	unless exists
-		Dir.mkdir(folder)
-		puts "Create #{folder}: Success..."
-	end
+begin
+	puts "Please ensure that your CSV file is: \n1.) in the #{converter.import_folder} folder\n2.) titled EXPORT.csv\n"
+	puts "Press enter when you're ready.."
+	gets
+	raise ArgumentError.new("CSV FILE NOT IN DIRECTORY!\n\n") unless File.exists?("#{converter.import_folder}/EXPORT.csv")
+rescue ArgumentError => e
+	puts "#{e}"
+	retry
 end
 
-
-puts "Please ensure that your CSV file is: \n1.) in the #{import_folder} folder\n2.) titled EXPORT.csv\n"
-puts "Press enter when you're ready.."
-gets
-raise ArgumentError.new("CSV FILE NOT IN DIRECTORY!") unless File.exists?("#{import_folder}/EXPORT.csv")
+raw_csv = converter.grab_trans
 
 
-#Defining headers
-top_header = %w(!TRNS DATE ACCNT NAME CLASS AMOUNT MEMO)
-mid_header = %w(!SPL DATE ACCNT NAME AMOUNT MEMO)
-bot_header = %w(!ENDTRNS)
-
-headers = [top_header, mid_header, bot_header]
-
-#Declare array to store CSV rows
-file_contents = []
-#For each line in the CSV File
-CSV.foreach("EXPORT.csv") do |row|
-	file_contents << row #Add the row of data as an Array to the file_contents array
-end
-
+=begin
 #Delete from the imported list of it's either Empty, or begins with anything other than a number (Supposed to be date)
 file_contents.delete_if {|content| content[0].nil? || content[0][0] !~ /^[0-9].*/}
 
@@ -72,3 +55,4 @@ File.open("Example.iif", "w") { |io|
 		io.write("ENDTRNS\t\n") #Next Trans
 	end
 }
+=end
