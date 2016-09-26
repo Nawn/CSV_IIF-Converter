@@ -1,6 +1,8 @@
 require_relative 'converter.rb'
 require 'csv'
 
+options = ["BBVA Compass - Noah's Boytique"]
+
 converter = Converter.new
 
 puts "Thank you for using the CSV to IIF file converter"
@@ -10,7 +12,23 @@ gets
 converter.folders()
 
 begin
-	puts "Please ensure that your CSV file is: \n1.) in the #{converter.import_folder} folder\n2.) titled EXPORT.csv\n"
+	puts "Please select import template: \n\n"
+	
+	options.each_with_index do |value, idx|
+		puts "#{idx+1}: #{value}\n\n"
+	end
+	
+	template = ""
+	response = gets.chomp
+
+	case response.to_i
+	when 1
+		template = "Date | Description | Check # <Empty=OK> | Debit | Credit"
+	else
+		raise ArgumentError.new("Input does not match any option!\n\n".upcase)
+	end
+
+	puts "Please ensure that your CSV file is: \n1.) in the #{converter.import_folder} folder\n2.) titled EXPORT.csv\n3.) Following format: #{template}\n"
 	puts "Press enter when you're ready.."
 	gets
 	raise ArgumentError.new("CSV FILE NOT IN DIRECTORY!\n\n") unless File.exists?("#{converter.import_folder}/EXPORT.csv")

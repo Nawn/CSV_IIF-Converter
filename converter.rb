@@ -7,7 +7,8 @@ class Converter
 		@headers = [@top_row, @mid_row, @bot_row]
 		@import_folder = "csv_file"
 		@export_folder = "export"
-		@folders = [@import_folder, @export_folder]
+		@config_folder = "config"
+		@folders = [@import_folder, @export_folder, @config_folder]
 	end
 
 	def folders
