@@ -1,4 +1,5 @@
 require_relative 'converter.rb'
+require_relative 'template.rb'
 require 'csv'
 
 options = ["BBVA Compass - Noah's Boytique"]
@@ -14,9 +15,9 @@ converter.folders()
 begin
 	puts "Please select import template: \n\n"
 	
-	options.each_with_index do |value, idx|
-		puts "#{idx+1}: #{value}\n\n"
-	end
+	#Template.list.each do |key, value|
+	#	puts "#{key}: #{value}\n\n"
+	#end
 	
 	template = ""
 	response = gets.chomp
