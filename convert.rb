@@ -14,22 +14,23 @@ converter.folders()
 
 begin
 	puts "Please select import template: \n\n"
-	
-	#Template.list.each do |key, value|
-	#	puts "#{key}: #{value}\n\n"
-	#end
-	
-	template = ""
+
+	options.each_with_index do |option, idx|
+		puts "#{idx+1}: #{option}"
+	end
+
 	response = gets.chomp
 
 	case response.to_i
 	when 1
-		template = "Date | Description | Check # <Empty=OK> | Debit | Credit"
+		template = Templates::Noah.new
 	else
 		raise ArgumentError.new("Input does not match any option!\n\n".upcase)
 	end
 
-	puts "Please ensure that your CSV file is: \n1.) in the #{converter.import_folder} folder\n2.) titled EXPORT.csv\n3.) Following format: #{template}\n"
+
+	#START HERE VVVVVVVVVVVVVVVVVVVVVVVVV
+	puts "Please ensure that your CSV file is: \n1.) in the #{converter.import_folder} folder\n2.) titled EXPORT.csv\n3.) Following format: #{template.desc}\n"
 	puts "Press enter when you're ready.."
 	gets
 	raise ArgumentError.new("CSV FILE NOT IN DIRECTORY!\n\n") unless File.exists?("#{converter.import_folder}/EXPORT.csv")
