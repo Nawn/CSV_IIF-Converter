@@ -41,6 +41,27 @@ end
 
 raw_csv = converter.grab_trans
 
+rejected = raw_csv.reject do |row|
+	template.valid_row?(row)
+end
+
+repeat = true
+
+until !repeat
+	puts "These are the rows that the program will filter out:\n\n#{rejected.map {|row| row << "\n"}.join(", ")}\n\n"
+	puts "Would you like to continue? [y/n]"
+	response = gets.chomp
+	case response.chomp.downcase
+	when 'n'
+		puts "Please edit your CSV sheet to match the requirements"
+		exit
+	when 'y'
+		puts "Continuing..."
+		repeat = false
+	else
+		puts "I'm sorry, I don't understand: \'#{response.chomp}\', please input \'y\' or \'n\'"
+	end
+end
 
 =begin
 #Delete from the imported list of it's either Empty, or begins with anything other than a number (Supposed to be date)
