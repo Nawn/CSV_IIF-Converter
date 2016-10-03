@@ -27,9 +27,7 @@ begin
 		raise ArgumentError.new("Input does not match any option!\n\n".upcase)
 	end
 
-
-	#START HERE VVVVVVVVVVVVVVVVVVVVVVVVV
-	puts "Please ensure that your CSV file is: \n1.) in the #{converter.import_folder} folder\n2.) titled EXPORT.csv\n3.) Following format: #{template.desc}\n"
+	puts "Please ensure that your CSV file is: \n1.) in the #{converter.import_folder} folder\n2.) titled EXPORT.csv\n3.) Following format: #{template.desc}\n4.) Ensure your comparison file is in the \'config\' folder, titled: #{template.config_name}"
 	puts "Press enter when you're ready.."
 	gets
 	raise ArgumentError.new("CSV FILE NOT IN DIRECTORY!\n\n") unless File.exists?("#{converter.import_folder}/EXPORT.csv")
@@ -48,25 +46,15 @@ repeat = true
 
 display_reject = rejected.map {|row| row << "\n"}.join(", ")
 
-until !repeat
-	puts "These are the rows that the program will filter out:\n\n#{display_reject}\n\n"
-	puts "Would you like to continue? [y/n]"
-	response = gets.chomp
-	case response.chomp.downcase
-	when 'n'
-		puts "Please edit your CSV sheet to match the requirements"
-		exit
-	when 'y'
-		puts "Continuing..."
-		repeat = false
-	else
-		puts "\n\n\n\n\nI'm sorry, I don't understand: \'#{response.chomp}\', please input \'y\' or \'n\'"
-	end
-end
+puts "These are the rows that the program will filter out:\n\n#{display_reject}\n\n"
+
+puts "Would you like to continue? [y/n]"
+
+Templates::Template.yn_continue("Please edit your CSV sheet to match the requirements")
 
 desired_rows = raw_csv.find_all {|row| template.valid_row?(row)}
 
-
+filtered = template.filter(desired_rows)
 
 =begin
 #Delete from the imported list of it's either Empty, or begins with anything other than a number (Supposed to be date)
