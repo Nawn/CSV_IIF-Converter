@@ -17,7 +17,7 @@ module Templates
 			input_string =~ /\d+\.?\d*/
 		end
 
-
+		#Ensures that a field is either Nil or an Empty string.
 		def present?(input_string)
 			!input_string.to_s.empty?
 		end

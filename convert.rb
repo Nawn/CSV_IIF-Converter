@@ -47,8 +47,10 @@ end
 
 repeat = true
 
+display_reject = rejected.map {|row| row << "\n"}.join(", ")
+
 until !repeat
-	puts "These are the rows that the program will filter out:\n\n#{rejected.map {|row| row << "\n"}.join(", ")}\n\n"
+	puts "These are the rows that the program will filter out:\n\n#{display_reject}\n\n"
 	puts "Would you like to continue? [y/n]"
 	response = gets.chomp
 	case response.chomp.downcase
@@ -59,9 +61,11 @@ until !repeat
 		puts "Continuing..."
 		repeat = false
 	else
-		puts "I'm sorry, I don't understand: \'#{response.chomp}\', please input \'y\' or \'n\'"
+		puts "\n\n\n\n\nI'm sorry, I don't understand: \'#{response.chomp}\', please input \'y\' or \'n\'"
 	end
 end
+
+desired_rows = raw_csv.find_all {|row| template.valid_row?(row)}
 
 =begin
 #Delete from the imported list of it's either Empty, or begins with anything other than a number (Supposed to be date)
