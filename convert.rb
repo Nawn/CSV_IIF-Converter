@@ -67,13 +67,10 @@ end
 
 desired_rows = raw_csv.find_all {|row| template.valid_row?(row)}
 
+
+
 =begin
 #Delete from the imported list of it's either Empty, or begins with anything other than a number (Supposed to be date)
-file_contents.delete_if {|content| content[0].nil? || content[0][0] !~ /^[0-9].*/}
-
-file_contents.each do |content|
-	puts content.inspect
-end
 
 File.open("Example.iif", "w") { |io|
 	#Add the header definitions at the top of the IIF.
