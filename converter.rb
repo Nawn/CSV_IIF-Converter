@@ -1,3 +1,5 @@
+require 'csv'
+
 class Converter
 	attr_reader :import_folder
 	def initialize

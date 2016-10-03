@@ -1,6 +1,5 @@
 require_relative 'converter.rb'
 require_relative 'template.rb'
-require 'csv'
 
 options = ["BBVA Compass - Noah's Boytique"]
 
