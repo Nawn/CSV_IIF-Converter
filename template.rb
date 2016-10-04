@@ -64,7 +64,7 @@ module Templates
 				return input_array
 			end
 
-			rules = load_rules
+			rules = load_rules.map { |rule| rule.split("~").map() {|indiv_rule| indiv_rule.split("!")}.inspect }
 			
 			rules.each do |rule|
 				puts "poopy rule: #{rule}"
