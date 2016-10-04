@@ -1,6 +1,9 @@
 require_relative 'converter.rb'
 require_relative 'template.rb'
 
+class FileExistContinue < StandardError
+end
+
 options = ["BBVA Compass - Noah's Boytique"]
 
 converter = Converter.new
@@ -26,7 +29,9 @@ begin
 	else
 		raise ArgumentError.new("Input does not match any option!\n\n".upcase)
 	end
-
+  
+  raise FileExistContinue.new() if File.exists?("#{converter.export_folder}/REVISE.csv")
+  
 	puts "Please ensure that your CSV file is: \n1.) in the #{converter.import_folder} folder\n2.) titled EXPORT.csv\n3.) Following format: #{template.desc}\n4.) Ensure your comparison file is in the \'config\' folder, titled: #{template.config_name}"
 	puts "Press enter when you're ready.."
 	gets
@@ -34,6 +39,10 @@ begin
 rescue ArgumentError => e
 	puts "#{e}"
 	retry
+rescue FileExistContinue => e
+  puts "I Notice that you already have a REVISE file in the #{converter.export_folder}/ folder."
+  puts "Would you like to continue using that file? [y/n]"
+  Templates::Template.yn_continue("Please remove the REVISE.csv file from the #{converter.export_folder}/ folder.")
 end
 
 raw_csv = converter.grab_trans
@@ -54,7 +63,26 @@ Templates::Template.yn_continue("Please edit your CSV sheet to match the require
 
 desired_rows = raw_csv.find_all {|row| template.valid_row?(row)}
 
+#Filtered will go through the list and apply the rules that we set up(This description math = This name/accnt)
 filtered = template.filter(desired_rows)
+#This adds header to the CSV so that Alex can know what he's editing and where to edit it.
+filtered.unshift(%w(Date Description Check# DebitAmount CreditAmount <nil> Name Account))
+
+
+#Prints out a Revise
+puts "Generating REVISE file in #{converter.export_folder}/..."
+
+
+CSV.open("#{converter.export_folder}/REVISE.csv", "w") do |csv|
+	filtered.each do |row|
+		csv << row
+	end
+end
+
+puts "There is a new file titled REVISE.csv in the #{converter.export_folder} folder"
+puts "Please open, and make any changes before we continue. Press enter when you are done."
+gets.chomp
+
 
 
 

@@ -6,10 +6,19 @@ module Templates
 		def date?(input_string)
 			input_string =~ /\d{1,4}\/\d{1,2}\/\d{1,4}/
 		end
+    
+    def convert_neg(input_string)
+      raise ArgumentError.new("Input must be string") unless input_string.is_a? String
+      raise ArgumentError.new("Input must begin with \'-\'") unless input_string[0] == "-"
+      
+      new_string = input_string[]
+    end
 
 		#Checks for values surrounded by Parenthesis
 		def neg_amount?(input_string)
-			input_string =~ /\(\d+\.?\d*\)/
+      input_string = input_string.to_s
+      #If it starts with - rather than (), then check without the parenthesis
+      input_string[0] == "-" ? pos_amount?(input_string[1..-1]) : input_string =~ /\(\d+\.?\d*\)/
 		end
 
 		def load_rules
@@ -18,7 +27,7 @@ module Templates
 
 		#Checks for bare amounts
 		def pos_amount?(input_string)
-			input_string =~ /\d+\.?\d*/
+			input_string =~ /^\d+\.?\d*$/
 		end
 
 		#Ensures that a field is either Nil or an Empty string.

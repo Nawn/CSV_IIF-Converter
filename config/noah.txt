@@ -1,0 +1,25 @@
+etsy~Etsy!Supplies & Materials
+aliexpress~Aliexpress!Supplies & Materials
+payment for amz~Amazon!Supplies & Materials  (note as change to 50% for shipping as well)
+amzni~Amazon!Sales
+atm withdrawal~Atm Withdrawal!Petty Cash
+brilliantvinyl~Brilliant Vinyl!Supplies & Materials
+fedex~Fedex!Shipping and Freight Costs
+on deck capital~On Deck Capital!Advertising & Promotion Expense
+stamps.com~Stamps.com!Shipping and Freight Costs
+credit for shopify~Shopify!Sales
+usps~USPS!Shipping and Freight Costs
+google~Google!Office Supplies Expense
+chevron~Chevron!Auto and Truck Expenses:Fuel Expense
+sponsored products~Sponsored Products!Advertising & Promotion Expense
+debitfund debit~Norma Martinez!Direct Contract Labor
+shopify-charge~Shopify!Supplies & Materials
+debitsurcharge fee~Bank Service Charge!Bank Service Charges
+debituse bus excep~Bank Service Charge!Bank Service Charges
+ds services~DS Services!Office Supplies Expense
+geico~Geico!Auto and Truck Expenses:Auto Insurance
+debitor compass bus card payment~Compass CC!Supplies & Materials
+olb ach per credit~Bank Service Charge!Bank Service Charges
+kamsnaps~Kamsnaps!Supplies & Materials
+panda express~Panda Express!Meals and Entertainment
+payment loan#~!Owner's Distributions

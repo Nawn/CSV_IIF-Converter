@@ -1,7 +1,7 @@
 require 'csv'
 
 class Converter
-	attr_reader :import_folder
+	attr_reader :import_folder, :export_folder
 	def initialize
 		@top_row = %w(!TRNS DATE ACCNT NAME CLASS AMOUNT MEMO)
 		@mid_row = %w(!SPL DATE ACCNT NAME AMOUNT MEMO)
@@ -26,15 +26,23 @@ class Converter
 		end
 	end
 
-	def grab_trans
+	def grab_trans(method=:import)
 		#Declare empty Array
 		file_contents = []
 		
 		#For each line in the CSV File
-		CSV.foreach("#{@import_folder}/EXPORT.csv") do |row|
+    case method
+    when :import
+      folder = @import_folder
+      filename = "EXPORT.csv"
+    when :revise
+      folder = @export_folder
+      filename = "REVISE.csv"
+    end
+    
+		CSV.foreach("#{folder}/#{filename}") do |row|
 			file_contents << row #Add the row of data as an Array to the file_contents array
 		end
-
 		#Return the array of arrays
 		file_contents
 	end
