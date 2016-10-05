@@ -1,6 +1,6 @@
 module Templates
 	class Template
-		attr_reader :desc, :config_name
+		attr_reader :desc, :config_name, :temp_header
 
 		#Checks for Dates
 		def date?(input_string)
@@ -58,6 +58,7 @@ module Templates
 		def initialize
 			@desc = "Date(mm/dd/yyyy) | Description | Check # <Empty=OK> | Debit | Credit"
 			@config_name = "noah.txt"
+			@temp_header = %w(Date Description Check# DebitAmount CreditAmount <nil> Name Account)
 		end
 
 		def valid_row?(input_array)

@@ -23,6 +23,7 @@ class Converter
 				Dir.mkdir(folder)
 				puts "Create #{folder}: Success..."
 			end
+			puts "\n\n\n"
 		end
 	end
 
@@ -39,11 +40,17 @@ class Converter
       folder = @export_folder
       filename = "REVISE.csv"
     end
-    
+	    
 		CSV.foreach("#{folder}/#{filename}") do |row|
 			file_contents << row #Add the row of data as an Array to the file_contents array
 		end
 		#Return the array of arrays
 		file_contents
+	end
+
+	def convert(input_array, input_template)
+		input_array.each do |trns|
+			puts trns.inspect
+		end
 	end
 end

@@ -9,8 +9,7 @@ options = ["BBVA Compass - Noah's Boytique"]
 converter = Converter.new
 
 puts "Thank you for using the CSV to IIF file converter"
-puts "Please press enter to begin..."
-gets
+puts "\n\n\n"
 
 converter.folders()
 
@@ -33,6 +32,8 @@ begin
   raise FileExistContinue.new() if File.exists?("#{converter.export_folder}/REVISE.csv")
   
 	puts "Please ensure that your CSV file is: \n1.) in the #{converter.import_folder} folder\n2.) titled EXPORT.csv\n3.) Following format: #{template.desc}\n4.) Ensure your comparison file is in the \'config\' folder, titled: #{template.config_name}"
+	sleep 1
+	system ( "start #{converter.import_folder}" )
 	puts "Press enter when you're ready.."
 	gets
 	raise ArgumentError.new("CSV FILE NOT IN DIRECTORY!\n\n") unless File.exists?("#{converter.import_folder}/EXPORT.csv")
@@ -42,6 +43,7 @@ rescue ArgumentError => e
 rescue FileExistContinue => e
   puts "I Notice that you already have a REVISE file in the #{converter.export_folder}/ folder."
   puts "Would you like to continue using that file? [y/n]"
+  system( "start #{converter.export_folder}" )
   Templates::Template.yn_continue("Please remove the REVISE.csv file from the #{converter.export_folder}/ folder.")
 end
 
@@ -66,7 +68,7 @@ desired_rows = raw_csv.find_all {|row| template.valid_row?(row)}
 #Filtered will go through the list and apply the rules that we set up(This description math = This name/accnt)
 filtered = template.filter(desired_rows)
 #This adds header to the CSV so that Alex can know what he's editing and where to edit it.
-filtered.unshift(%w(Date Description Check# DebitAmount CreditAmount <nil> Name Account))
+filtered.unshift(template.temp_header)
 
 
 #Prints out a Revise
@@ -81,9 +83,15 @@ end
 
 puts "There is a new file titled REVISE.csv in the #{converter.export_folder} folder"
 puts "Please open, and make any changes before we continue. Press enter when you are done."
+system ( "start #{converter.export_folder}" )
 gets.chomp
 
-
+#Grab the REVISE.csv file.
+filtered = converter.grab_trans(:revise)
+#Remove the headers that I added to help User know what he's editing Revise.
+filtered.shift
+#Turn the filtered array into an array that becomes IIF when tab-delim
+converter.convert(filtered, template)
 
 
 
