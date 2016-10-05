@@ -64,11 +64,29 @@ module Templates
 				return input_array
 			end
 
-			rules = load_rules.map { |rule| rule.split("~").map() {|indiv_rule| indiv_rule.split("!")}.inspect }
-			
+			rules = load_rules.map { |rule| rule.split("~").map() {|indiv_rule| indiv_rule.split("!")}}
+			#For rules: 
+			#0,0 will get me the item to search in Description
+			#1,0 will get me the name to place it under in QB
+			#1,1.chomp will get me the accnt to place it under
+
+			#For row/idx:
+			#idx will tell you which row in input_array this is
+			#row will provide a 6-size array of transaction data
+			#Description will be in row[1]
+			#We will set row[6]=name row[7]=accnt
+
+			processed = input_array.clone
+
 			rules.each do |rule|
-				puts "poopy rule: #{rule}"
+				processed.each_with_index do |row, idx|
+					if row[1].downcase.include? rule[0][0].downcase
+						row << rule[1][0] << rule[1][1].chomp
+					end
+				end
 			end
+
+			processed
 		end
 	end
 end

@@ -56,6 +56,9 @@ desired_rows = raw_csv.find_all {|row| template.valid_row?(row)}
 
 filtered = template.filter(desired_rows)
 
+
+
+
 =begin
 #Delete from the imported list of it's either Empty, or begins with anything other than a number (Supposed to be date)
 
