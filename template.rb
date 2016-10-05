@@ -35,6 +35,13 @@ module Templates
 			!input_string.to_s.empty?
 		end
 
+		def self.default
+			top_row = %w(!TRNS DATE ACCNT NAME CLASS AMOUNT MEMO)
+			mid_row = %w(!SPL DATE ACCNT NAME AMOUNT MEMO)
+			bot_row = %w(!ENDTRNS)
+			[top_row, mid_row, bot_row]
+		end
+
 		def self.yn_continue(first_string)
 			repeat = true
 
@@ -97,6 +104,28 @@ module Templates
 			end
 
 			processed
+		end
+
+		#Returns an array ready to be converted by CSV lib to Tab-Delim
+		def generate(input_array)
+			cloned_trans = input_array.clone
+			#Guide: input_array contains (n) rows of Transactions
+			#In each transaction array, there is TRNS data.
+			#For Noah: 
+			# row[0]: date
+			# row[1]: desc
+			# row[2]: check#? Probably empty
+			# row[3]: Debit Amount, it means it's suppose to be negative
+			#  Typically Debits
+			# row[4]: Credit Amount, supposed to be positive
+			#  Typically empty, but there are Credits
+			# row[5]: Empty. Idk what goes there. It's just empty on import
+			# row[6]: If not filtered, NIL, if filtered, String=Name
+			# row[7]: "If not..", if filtered, String=Accnt
+			
+
+
+			cloned_trans
 		end
 	end
 end

@@ -3,10 +3,6 @@ require 'csv'
 class Converter
 	attr_reader :import_folder, :export_folder
 	def initialize
-		@top_row = %w(!TRNS DATE ACCNT NAME CLASS AMOUNT MEMO)
-		@mid_row = %w(!SPL DATE ACCNT NAME AMOUNT MEMO)
-		@bot_row = %w(!ENDTRNS)
-		@headers = [@top_row, @mid_row, @bot_row]
 		@import_folder = "csv_file"
 		@export_folder = "export"
 		@config_folder = "config"
@@ -49,8 +45,6 @@ class Converter
 	end
 
 	def convert(input_array, input_template)
-		input_array.each do |trns|
-			puts trns.inspect
-		end
+		template.generate(input_array)
 	end
 end
