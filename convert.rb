@@ -4,7 +4,11 @@ require_relative 'template.rb'
 class FileExistContinue < StandardError
 end
 
-options = ["BBVA Compass - Noah's Boytique"]
+options = []
+
+Templates.constants.each_with_index do |constant, idx|
+	options << Templates.const_get(constant).new unless idx==0
+end
 
 converter = Converter.new
 
@@ -17,18 +21,16 @@ begin
 	puts "Please select import template: \n\n"
 
 	options.each_with_index do |option, idx|
-		puts "#{idx+1}: #{option}"
+		puts "#{idx+1}: #{option.display_name}"
 	end
 
 	response = gets.chomp
-
-	case response.to_i
-	when 1
-		template = Templates::Noah.new
-	else
-		raise ArgumentError.new("Input does not match any option!\n\n".upcase)
-	end
-  
+	raise ArgumentError.new("\n\nInput must be a number\n\n") unless response =~ /\d+/
+	raise ArgumentError.new("\n\nInput must be positive number\n\n") if response.to_i < 1
+	
+	template = options[response.to_i - 1]
+	raise ArgumentError.new("\n\nThat number does not have a Template assigned\n\n") if template.nil?
+	
   raise FileExistContinue.new() if File.exists?("#{converter.export_folder}/REVISE.csv")
   
 	puts "Please ensure that your CSV file is: \n1.) in the #{converter.import_folder} folder\n2.) titled EXPORT.csv\n3.) Following format: #{template.desc}\n4.) Ensure your comparison file is in the \'config\' folder, titled: #{template.config_name}"
@@ -45,6 +47,13 @@ rescue FileExistContinue => e
   puts "Would you like to continue using that file? [y/n]"
   system( "start #{converter.export_folder}" )
   Templates::Template.yn_continue("Please remove the REVISE.csv file from the #{converter.export_folder}/ folder.")
+	
+	#Grab the REVISE.csv file.
+	filtered = converter.grab_trans(:revise)
+	#Remove the headers that I added to help User know what he's editing Revise.
+	filtered.shift
+	#Turn the filtered array into an array that becomes IIF when tab-delim
+	converter.convert(filtered, template)
 end
 
 raw_csv = converter.grab_trans

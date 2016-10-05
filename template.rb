@@ -1,6 +1,6 @@
 module Templates
 	class Template
-		attr_reader :desc, :config_name, :temp_header
+		attr_reader :desc, :config_name, :temp_header, :display_name
 
 		#Checks for Dates
 		def date?(input_string)
@@ -66,6 +66,7 @@ module Templates
 			@desc = "Date(mm/dd/yyyy) | Description | Check # <Empty=OK> | Debit | Credit"
 			@config_name = "noah.txt"
 			@temp_header = %w(Date Description Check# DebitAmount CreditAmount <nil> Name Account)
+			@display_name = "BBVA Compass - Noah's Boytique"
 		end
 
 		def valid_row?(input_array)
@@ -122,7 +123,7 @@ module Templates
 			# row[5]: Empty. Idk what goes there. It's just empty on import
 			# row[6]: If not filtered, NIL, if filtered, String=Name
 			# row[7]: "If not..", if filtered, String=Accnt
-			
+
 
 
 			cloned_trans

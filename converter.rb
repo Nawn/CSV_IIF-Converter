@@ -45,6 +45,6 @@ class Converter
 	end
 
 	def convert(input_array, input_template)
-		template.generate(input_array)
+		input_template.generate(input_array)
 	end
 end
