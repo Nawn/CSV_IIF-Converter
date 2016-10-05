@@ -109,24 +109,34 @@ module Templates
 
 		#Returns an array ready to be converted by CSV lib to Tab-Delim
 		def generate(input_array)
-			cloned_trans = input_array.clone
 			#Guide: input_array contains (n) rows of Transactions
 			#In each transaction array, there is TRNS data.
 			#For Noah: 
-			# row[0]: date
-			# row[1]: desc
-			# row[2]: check#? Probably empty
-			# row[3]: Debit Amount, it means it's suppose to be negative
+			# trns[0]: date
+			# trns[1]: desc
+			# trns[2]: check#? Probably empty
+			# trns[3]: Debit Amount, it means it's suppose to be negative
 			#  Typically Debits
-			# row[4]: Credit Amount, supposed to be positive
+			# trns[4]: Credit Amount, supposed to be positive
 			#  Typically empty, but there are Credits
-			# row[5]: Empty. Idk what goes there. It's just empty on import
-			# row[6]: If not filtered, NIL, if filtered, String=Name
-			# row[7]: "If not..", if filtered, String=Accnt
+			# trns[5]: Empty. Idk what goes there. It's just empty on import
+			# trns[6]: If not filtered, NIL, if filtered, String=Name
+			# trns[7]: "If not..", if filtered, String=Accnt
 
+			cloned_trans = input_array.map do |trns|
+				
+				date = trns[0]
+				account = trns[7]
+				name = trns[6]
+				class_var = ''
 
+				#trns[3], trns[4] are the values I'm gonna check to 
+				#see how I'm going to do this.
 
-			cloned_trans
+				amount = 
+				memo = 
+				
+			end
 		end
 	end
 end
