@@ -21,6 +21,16 @@ module Templates
       input_string[0] == "-" ? pos_amount?(input_string[1..-1]) : input_string =~ /\(\d+\.?\d*\)/
 		end
 
+		def convert_neg(input_string)
+			if input_string[0] == "-"
+				return input_string.to_i
+			elsif input_string[0] == "("
+				return input_string[1..-2].to_i * -1
+			else
+				raise ArgumentError.new("Error, unexpected #{input_string[0]}: expecting \'-\' or \'(\'")
+			end
+		end
+
 		def load_rules
 			File.readlines("config/#{@config_name}", "\n")
 		end
@@ -36,8 +46,8 @@ module Templates
 		end
 
 		def self.default
-			top_row = %w(!TRNS DATE ACCNT NAME CLASS AMOUNT MEMO)
-			mid_row = %w(!SPL DATE ACCNT NAME AMOUNT MEMO)
+			top_row = %w(!TRNS DATE ACCNT NAME CLASS AMOUNT MEMO DOCNUM)
+			mid_row = %w(!SPL DATE ACCNT NAME AMOUNT MEMO DOCNUM)
 			bot_row = %w(!ENDTRNS)
 			[top_row, mid_row, bot_row]
 		end
@@ -122,21 +132,47 @@ module Templates
 			# trns[5]: Empty. Idk what goes there. It's just empty on import
 			# trns[6]: If not filtered, NIL, if filtered, String=Name
 			# trns[7]: "If not..", if filtered, String=Accnt
+			return_array = []
 
-			cloned_trans = input_array.map do |trns|
-				
+			input_array.each do |trns|
+
 				date = trns[0]
 				account = trns[7]
 				name = trns[6]
+				debit = trns[3]
+				credit = trns[4]
 				class_var = ''
+				amount = 0
+				check_num = trns[2]
 
 				#trns[3], trns[4] are the values I'm gonna check to 
 				#see how I'm going to do this.
+				if present?(debit)
+					if debit[0] == "-"
+						amount = debit.to_i
+					elsif debit[0] == "("
+						amount = debit[1..-2].to_i * -1
+					else
+						raise ArgumentError.new("Error, unexpected #{debit[0]}: expecting \'-\' or \'(\'")
+					end
+				elsif present?(credit)
+					amount = credit.to_i
+				else
+					puts "ERROR! Both Credit and Debit field are empty"
+				end
 
-				amount = 
-				memo = 
-				
+				memo = trns[1]
+
+				return_array << ["TRNS", date.to_s, account.to_s, name.to_s, '', amount.to_s, memo.to_s]
+				return_array << ["SPL", date.to_s, account.to_s, name.to_s, (amount.to_i * -1).to_s, memo.to_s]
+				return_array << ["ENDTRNS"]
 			end
+
+			Template.default.reverse.each do |array|
+				return_array.unshift(array)
+			end
+
+			return_array
 		end
 	end
 end
