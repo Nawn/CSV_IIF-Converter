@@ -45,6 +45,10 @@ class Converter
 	end
 
 	def convert(input_array, input_template)
-		input_template.generate(input_array)
+		File.open("#{@export_folder}/COMPLETE.iif", "w") do |io|
+			input_template.generate(input_array).each do |row|
+				io.write( "#{row.join("\t")}\n" )
+			end
+		end
 	end
 end
