@@ -1,5 +1,4 @@
-require_relative 'template.rb'
-require_relative 'converter.rb'
+require_relative 'lib/converter.rb'
 
 #To Raise later if the REVISE File exists
 class FileExistContinue < StandardError
@@ -59,11 +58,14 @@ begin
 	gets
 	raise ArgumentError.new("CSV FILE NOT IN DIRECTORY!\n\n") unless File.exists?("#{converter.import_folder}/EXPORT.csv")
 
-
 rescue ArgumentError => e
+	#If they input the wrong argument, retry
 	puts "#{e}"
 	retry
+
 rescue FileExistContinue => e
+
+	#If they already have a generated REVISE File, ask to continue or del.
   puts "I Notice that you already have a REVISE file in the #{converter.export_folder}/ folder."
   puts "Would you like to continue using that file? [y/n]"
   user_response = gets.chomp
@@ -80,8 +82,11 @@ rescue FileExistContinue => e
 	end
 end
 
+#Generate a Revise file for them to edit
 converter.gen_revise(template)
 
+#Tell them to make changes to it.
+#Then run the convert portion to the Revise file
 puts "There is a new file titled REVISE.csv in the #{converter.export_folder} folder"
 puts "Please open, and make any changes before we continue. Press enter when you are done."
 system ( "start #{converter.export_folder}" )

@@ -6,31 +6,32 @@ module Templates
 		def date?(input_string)
 			input_string =~ /\d{1,4}\/\d{1,2}\/\d{1,4}/
 		end
-    
-    def convert_neg(input_string)
-      raise ArgumentError.new("Input must be string") unless input_string.is_a? String
-      raise ArgumentError.new("Input must begin with \'-\'") unless input_string[0] == "-"
-      
-      new_string = input_string[]
-    end
 
-		#Checks for values surrounded by Parenthesis
+		#Checks for values surrounded by Parenthesis, or beginning
+		#with - signs
 		def neg_amount?(input_string)
       input_string = input_string.to_s
       #If it starts with - rather than (), then check without the parenthesis
       input_string[0] == "-" ? pos_amount?(input_string[1..-1]) : input_string =~ /\(\d+\.?\d*\)/
 		end
 
+		#Turns a negative number, regardless of negative indication
+		#into a Negative INT
 		def convert_neg(input_string)
+			#If it starts with a '-' then it's already ready
 			if input_string[0] == "-"
 				return input_string.to_i
+			#If it starts with '('
 			elsif input_string[0] == "("
+				#Return the number without the parenthesis, and multiply 
+				#By negative one because it'll be positive
 				return input_string[1..-2].to_i * -1
 			else
 				raise ArgumentError.new("Error, unexpected #{input_string[0]}: expecting \'-\' or \'(\'")
 			end
 		end
 
+		#Literally just reads the rules
 		def load_rules
 			File.readlines("config/#{@config_name}", "\n")
 		end
@@ -45,6 +46,7 @@ module Templates
 			!input_string.to_s.empty?
 		end
 
+		#Default headers
 		def self.default
 			top_row = %w(!TRNS DATE ACCNT NAME CLASS AMOUNT MEMO DOCNUM)
 			mid_row = %w(!SPL DATE ACCNT NAME AMOUNT MEMO DOCNUM)
@@ -52,6 +54,8 @@ module Templates
 			[top_row, mid_row, bot_row]
 		end
 
+		#Creates a Yes or No menu where yes continues,
+		#And no exits the program
 		def self.yn_continue(first_string)
 			repeat = true
 
@@ -79,10 +83,13 @@ module Templates
 			@display_name = "BBVA Compass - Noah's Boytique"
 		end
 
+		#Child class defined: checks if it means Criteria
+		#(Per Row)
 		def valid_row?(input_array)
 			date?(input_array[0]) && present?(input_array[1]) && (neg_amount?(input_array[3]) || !present?(input_array[3])) && (pos_amount?(input_array[4]) || !present?(input_array[4]))
 		end
 
+		#Will go through the rules and apply them iteratively
 		def filter(input_array)
 			#The DSL for this method is <Description: search string>~<Designated Name>!<Designated Account>
 			unless File.exist?("config/#{@config_name}")
@@ -92,6 +99,8 @@ module Templates
 				return input_array
 			end
 
+			#This will create an array with idx 1 being another array of data
+			#Including designated accounts and names
 			rules = load_rules.map { |rule| rule.split("~").map() {|indiv_rule| indiv_rule.split("!")}}
 			#For rules: 
 			#0,0 will get me the item to search in Description
@@ -148,13 +157,7 @@ module Templates
 				#trns[3], trns[4] are the values I'm gonna check to 
 				#see how I'm going to do this.
 				if present?(debit)
-					if debit[0] == "-"
-						amount = debit.to_i
-					elsif debit[0] == "("
-						amount = debit[1..-2].to_i * -1
-					else
-						raise ArgumentError.new("Error, unexpected #{debit[0]}: expecting \'-\' or \'(\'")
-					end
+					amount = convert_neg(debit)
 				elsif present?(credit)
 					amount = credit.to_i
 				else
