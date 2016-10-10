@@ -45,15 +45,23 @@ rescue ArgumentError => e
 rescue FileExistContinue => e
   puts "I Notice that you already have a REVISE file in the #{converter.export_folder}/ folder."
   puts "Would you like to continue using that file? [y/n]"
-  system( "start #{converter.export_folder}" )
-  Templates::Template.yn_continue("Please remove the REVISE.csv file from the #{converter.export_folder}/ folder.")
-	
-	#Grab the REVISE.csv file.
-	filtered = converter.grab_trans(:revise)
-	#Remove the headers that I added to help User know what he's editing Revise.
-	filtered.shift
-	#Turn the filtered array into an array that becomes IIF when tab-delim
-	converter.convert(filtered, template)
+  user_response = gets.chomp
+
+  case user_response.chomp.downcase
+  when 'y'
+	  #Grab the REVISE.csv file.
+		filtered = converter.grab_trans(:revise)
+		#Remove the headers that I added to help User know what he's editing Revise.
+		filtered.shift
+		#Turn the filtered array into an array that becomes IIF when tab-delim
+		converter.convert(filtered, template)
+		exit
+	when 'n'
+		File.delete("#{converter.export_folder}/REVISE.csv")
+	else
+		puts "I'm sorry I don't understand #{user_response}"
+		retry
+	end
 end
 
 raw_csv = converter.grab_trans
